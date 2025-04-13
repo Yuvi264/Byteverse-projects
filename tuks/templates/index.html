@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Support Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #e0e7ff;
+            --secondary: #3a0ca3;
+            --white: #ffffff;
+            --gray: #f3f4f6;
+            --dark-gray: #6b7280;
+            --black: #111827;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #f94144;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f9fafb;
+            min-height: 100vh;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Role Switcher */
+        .role-switcher {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .role-switcher select {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .mentor-id-input {
+            margin-top: 5px;
+            display: none;
+        }
+
+        .mentor-id-input input {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            width: 80px;
+        }
+
+        .mentor-id-input button {
+            padding: 5px 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        /* Search Section */
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        #search {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        #search:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        #search-btn {
+            padding: 1rem 2rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        #search-btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        /* Filters */
+        .filter-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* Results */
+        .results-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .mentor-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .mentor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mentor-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .mentor-rating {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .mentor-body {
+            padding: 1.5rem;
+        }
+        
+        .mentor-expertise {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .expertise-tag {
+            background-color: #e9ecef;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--dark);
+        }
+        
+        .mentor-story {
+            margin-bottom: 1.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .mentor-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1.5rem 1.5rem;
+        }
+        
+        .mentor-language {
+            background-color: var(--success);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .contact-btn {
+            padding: 0.5rem 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .contact-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.2rem;
+            color: var(--primary);
+            display: none;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            grid-column: 1 / -1;
+            color: #6c757d;
+            display: none;
+        }
+
+        /* Mentor View */
+        #mentor-view {
+            display: none;
+            margin-top: 20px;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        #mentor-chat-list {
+            margin-top: 1rem;
+        }
+
+        .chat-item {
+            padding: 1rem;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-item button {
+            padding: 0.3rem 0.8rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .chat-item button:hover {
+            background: var(--secondary);
+        }
+
+        /* Chat Modals */
+        .chat-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .chat-container {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+        
+        .chat-header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: var(--gray);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-top-right-radius: 4px;
+        }
+        
+        .mentor-message {
+            align-self: flex-start;
+            background: var(--white);
+            color: var(--black);
+            border-top-left-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .system-message {
+            align-self: center;
+            color: var(--dark-gray);
+            font-size: 0.8rem;
+            margin: 5px 0;
+        }
+        
+        .chat-input-container {
+            display: flex;
+            padding: 12px;
+            background: var(--white);
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        #chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 24px;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        #chat-input:focus {
+            border-color: var(--primary);
+        }
+        
+        #send-chat-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            margin-left: 8px;
+        }
+        
+        #send-chat-btn:hover {
+            background: var(--secondary);
+        }
+
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            padding: 8px 16px;
+            background: var(--white);
+            border-radius: 18px;
+            font-size: 12px;
+            color: var(--dark-gray);
+        }
+
+        /* Floating Chat Button */
+        .floating-chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .floating-chat-button:hover {
+            transform: scale(1.1);
+            background: var(--secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .results-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            #search-btn {
+                width: 100%;
+            }
+
+            .role-switcher {
+                position: static;
+                margin-bottom: 1rem;
+                text-align: center;
+            }
+
+            .chat-container {
+                height: 90vh;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Role Switcher -->
+        <div class="role-switcher">
+            <select id="role-switcher">
+                <option value="user">👤 User Mode</option>
+                <option value="mentor">🧑‍⚕ Mentor Mode</option>
+            </select>
+            <div class="mentor-id-input" id="mentor-id-input">
+                Mentor ID: <input id="mentor-id" placeholder="mentor1">
+                <button id="activate-mentor">Activate</button>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header>
+            <h1>Mental Health Support Platform</h1>
+            <p>Get immediate help from our AI companion or connect with experienced mentors</p>
+        </header>
+
+        <!-- Search Section (User View) -->
+        <div id="user-view">
+            <div class="search-container">
+                <input type="text" id="search" placeholder="Type your mental health concern (e.g. anxiety, depression)...">
+                <button id="search-btn">Search Mentors</button>
+            </div>
+            
+            <div class="filter-container">
+                <button class="filter-btn active" data-tag="all">All</button>
+                <button class="filter-btn" data-tag="anxiety">Anxiety</button>
+                <button class="filter-btn" data-tag="depression">Depression</button>
+                <button class="filter-btn" data-tag="ptsd">PTSD</button>
+                <button class="filter-btn" data-tag="stress">Stress</button>
+                <button class="filter-btn" data-tag="ocd">OCD</button>
+            </div>
+            
+            <div class="loading" id="loading">
+                <p>Finding the best mentors for you...</p>
+            </div>
+            
+            <div class="no-results" id="no-results">
+                <p>No mentors found for your search. Try a different term.</p>
+            </div>
+            
+            <div class="results-container" id="results">
+                <!-- Mentor cards will be inserted here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Mentor View -->
+        <div id="mentor-view">
+            <h2>Your Active Chats</h2>
+            <div id="mentor-chat-list"></div>
+        </div>
+    </div>
+
+    <!-- Floating Chat Button (AI Companion) -->
+    <button class="floating-chat-button" id="chatButton">
+        <i class="fas fa-comment-medical"></i>
+    </button>
+
+    <!-- AI Companion Chat Container -->
+    <div class="chat-container" id="aiChatContainer">
+        <div class="chat-header">
+            <h2>Tuks Anonmind</h2>
+            <button class="close-chat" id="closeAiChat">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="chat-messages" id="aiChatMessages">
+            <div class="message bot-message">
+                Hello! I'm Tuks, your mental health companion. This is a safe space where you can share anything on your mind. How are you feeling today?
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="aiTypingIndicator">
+            Tuks is typing...
+        </div>
+
+        <form class="chat-input-container" id="aiChatForm">
+            <input type="text" id="aiChatInput" placeholder="Type your message..." autocomplete="off">
+            <button type="submit" id="send-ai-chat-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- Mentor Chat Modal -->
+    <div class="chat-modal" id="mentorChatModal">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h3 id="chat-title">Chat with <span id="mentor-chat-name"></span></h3>
+                <button class="close-chat" id="close-mentor-chat">×</button>
+            </div>
+            <div class="chat-messages" id="mentor-chat-messages"></div>
+            <div class="chat-input-container">
+                <input type="text" id="mentor-chat-input" placeholder="Type your message...">
+                <button id="send-mentor-chat-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const roleSwitcher = document.getElementById('role-switcher');
+            const mentorIdInput = document.getElementById('mentor-id-input');
+            const mentorIdField = document.getElementById('mentor-id');
+            const activateMentorBtn = document.getElementById('activate-mentor');
+            const userView = document.getElementById('user-view');
+            const mentorView = document.getElementById('mentor-view');
+            
+            // Search elements
+            const searchInput = document.getElementById('search');
+            const searchBtn = document.getElementById('search-btn');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const resultsContainer = document.getElementById('results');
+            const loadingElement = document.getElementById('loading');
+            const noResultsElement = document.getElementById('no-results');
+            
+            // AI Chat elements
+            const chatButton = document.getElementById('chatButton');
+            const aiChatContainer = document.getElementById('aiChatContainer');
+            const closeAiChat = document.getElementById('closeAiChat');
+            const aiChatMessages = document.getElementById('aiChatMessages');
+            const aiChatForm = document.getElementById('aiChatForm');
+            const aiChatInput = document.getElementById('aiChatInput');
+            const aiTypingIndicator = document.getElementById('aiTypingIndicator');
+            
+            // Mentor Chat elements
+            const mentorChatModal = document.getElementById('mentorChatModal');
+            const closeMentorChat = document.getElementById('close-mentor-chat');
+            const mentorChatMessages = document.getElementById('mentor-chat-messages');
+            const mentorChatInput = document.getElementById('mentor-chat-input');
+            const mentorChatName = document.getElementById('mentor-chat-name');
+            
+            // State variables
+            let currentRole = 'user';
+            let currentUserId = 'user_' + Math.random().toString(36).substr(2, 5);
+            let currentRoom = null;
+            let currentMentor = null;
+            
+            // Connect to Socket.io server
+            const socket = io('http://localhost:5000');
+
+            // ======================
+            // ROLE MANAGEMENT
+            // ======================
+            // Role switcher handler
+            roleSwitcher.addEventListener('change', function() {
+                if (this.value === 'mentor') {
+                    mentorIdInput.style.display = 'block';
+                } else {
+                    mentorIdInput.style.display = 'none';
+                    switchToUserMode();
+                }
+            });
+
+            // Mentor activation
+            activateMentorBtn.addEventListener('click', function() {
+                const mentorId = mentorIdField.value.trim();
+                if (mentorId) {
+                    switchToMentorMode(mentorId);
+                }
+            });
+
+            function switchToMentorMode(mentorId) {
+                currentRole = 'mentor';
+                currentUserId = mentor_${mentorId};
+                
+                // Update UI
+                userView.style.display = 'none';
+                mentorView.style.display = 'block';
+                
+                // Initialize mentor view
+                socket.emit('mentor_join', { mentor_id: mentorId });
+                loadMentorChats(mentorId);
+            }
+
+            function switchToUserMode() {
+                currentRole = 'user';
+                userView.style.display = 'block';
+                mentorView.style.display = 'none';
+            }
+
+            function loadMentorChats(mentorId) {
+                fetch(http://localhost:5000/api/mentor/active_chats?mentor_id=${mentorId})
+                    .then(res => res.json())
+                    .then(data => {
+                        const chatList = document.getElementById('mentor-chat-list');
+                        chatList.innerHTML = data.chats.map(chat => `
+                            <div class="chat-item" data-room="${chat}">
+                                Chat with User ${chat.split('')[1].replace('user', '')}
+                                <button onclick="joinChatAsMentor('${chat}')">Join</button>
+                            </div>
+                        `).join('');
+                    }));
+            }
+
+            function joinChatAsMentor(roomId) {
+                currentRoom = roomId;
+                const mentorId = currentUserId.split('_')[1];
+                socket.emit('join_chat', {
+                    room_id: roomId,
+                    username: Mentor-${mentorId},
+                })
+                
+                // Show chat modal
+                mentorChatModal.style.display = 'flex';
+                mentorChatName.textContent = User ${roomId.split('_')[1].replace('user_', '')};
+                mentorChatMessages.innerHTML = '';
+            }
+
+            // ======================
+            // MENTOR SEARCH/FINDER
+            // ======================
+            
+            async function fetchMentors(problem = '') {
+                loadingElement.style.display = 'block';
+                resultsContainer.innerHTML = '';
+                noResultsElement.style.display = 'none';
+                
+                try {
+                    const response = await fetch(http://localhost:5000/api/recommend?problem=${encodeURIComponent(problem)});
+                    const data = await response.json();
+                    
+                    loadingElement.style.display = 'none';
+                    
+                    if (data.mentors && data.mentors.length > 0) {
+                        displayMentors(data.mentors);
+                    } else {
+                        noResultsElement.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Error fetching mentors:', error);
+                    loadingElement.style.display = 'none';
+                    noResultsElement.style.display = 'block';
+                }
+            }
+            
+            function displayMentors(mentors) {
+                resultsContainer.innerHTML = '';
+                
+                mentors.forEach(mentor => {
+                    const mentorCard = document.createElement('div');
+                    mentorCard.className = 'mentor-card';
+                    
+                    mentorCard.innerHTML = `
+                        <div class="mentor-header">
+                            <h2>${mentor.name}</h2>
+                            <div class="mentor-rating">
+                                <span>⭐</span>
+                                <span>${mentor.rating}</span>
+                            </div>
+                        </div>
+                        <div class="mentor-body">
+                            <div class="mentor-expertise">
+                                ${mentor.problem_tags.map(tag => `
+                                    <span class="expertise-tag">${tag}</span>
+                                `).join('')}
+                            </div>
+                            <p class="mentor-story">${mentor.story}</p>
+                        </div>
+                        <div class="mentor-footer">
+                            <span class="mentor-language">${mentor.language}</span>
+                            <button class="contact-btn chat-btn" data-mentor-id="${mentor.id}" data-mentor-name="${mentor.name}">Chat Now</button>
+                        </div>
+                    `;
+                    
+                    resultsContainer.appendChild(mentorCard);
+                });
+                
+                // Add event listeners to all chat buttons
+                document.querySelectorAll('.chat-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        startChat(this.dataset.mentorId, this.dataset.mentorName);
+                    });
+                });
+            }
+            
+            function startChat(mentorId, mentorName) {
+                currentMentor = { id: mentorId, name: mentorName };
+                mentorChatName.textContent = mentorName;
+                
+                // Create/get chat room
+                fetch('http://localhost:5000/api/create_chat_room', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        user_id: currentUserId,
+                        mentor_id: mentorId
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    currentRoom = data.room_id;
+                    socket.emit('join_chat', {
+                        room_id: currentRoom,
+                        username: User-${currentUserId.substr(0, 4)}
+                    });
+                    
+                    // Show chat modal
+                    mentorChatModal.style.display = 'flex';
+                    mentorChatMessages.innerHTML = ''; // Clear previous messages
+                });
+            }
+
+            // ======================
+            // CHAT FUNCTIONALITY
+            // ======================
+            
+            function sendMentorMessage() {
+                const message = mentorChatInput.value.trim();
+                if (message && currentRoom) {
+                    // Emit message to server
+                    socket.emit('send_chat_message', {
+                        room_id: currentRoom,
+                        sender: currentUserId,
+                        text: message
+                    });
+                    
+                    // Add message to UI immediately
+                    addMessageToChat(currentUserId, message, true, mentorChatMessages);
+                    mentorChatInput.value = '';
+                }
+            }
+            
+            function sendAiMessage(e) {
+                e.preventDefault();
+                const message = aiChatInput.value.trim();
+                
+                if (message) {
+                    // Add user message to chat
+                    addMessageToChat(currentUserId, message, true, aiChatMessages);
+                    aiChatInput.value = '';
+                    
+                    // Show typing indicator
+                    aiTypingIndicator.style.display = 'block';
+                    aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+                    
+                    try {
+                        // Send message to backend
+                        fetch('http://localhost:5000/get', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ msg: message })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Hide typing indicator and add bot response
+                            aiTypingIndicator.style.display = 'none';
+                            addMessageToChat('tuks', data.response, false, aiChatMessages);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            aiTypingIndicator.style.display = 'none';
+                            addMessageToChat('tuks', "Sorry, I'm having trouble responding right now.", false, aiChatMessages);
+                        });
+                        
+                    } catch (error) {
+                        console.error('Error:', error);
+                        aiTypingIndicator.style.display = 'none';
+                        addMessageToChat('tuks', "Sorry, I'm having trouble responding right now.", false, aiChatMessages);
+                    }
+                }
+            }
+            
+            function addMessageToChat(sender, message, isCurrentUser = false, container) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = message ${isCurrentUser ? 'user-message' : 'mentor-message'};
+                messageDiv.textContent = message;
+                container.appendChild(messageDiv);
+                container.scrollTop = container.scrollHeight;
+            }
+
+            // ======================
+            // SOCKET.IO EVENT LISTENERS
+            // ======================
+            
+            socket.on('chat_message', (data) => {
+                // Only add message if it's from the mentor (not our own echoed message)
+                if (data.sender !== currentUserId) {
+                    if (mentorChatModal.style.display === 'flex') {
+                        addMessageToChat(data.sender, data.text, false, mentorChatMessages);
+                    }
+                }
+            });
+            
+            socket.on('system_message', (data) => {
+                const systemMsg = document.createElement('div');
+                systemMsg.className = 'system-message';
+                systemMsg.textContent = data.text;
+                mentorChatMessages.appendChild(systemMsg);
+                mentorChatMessages.scrollTop = mentorChatMessages.scrollHeight;
+            });
+
+            // ======================
+            // EVENT LISTENERS
+            // ======================
+            
+            // AI Chat
+            chatButton.addEventListener('click', () => {
+                aiChatContainer.style.display = 'flex';
+                setTimeout(() => {
+                    aiChatInput.focus();
+                }, 300);
+            });
+
+            closeAiChat.addEventListener('click', () => {
+                aiChatContainer.style.display = 'none';
+            });
+
+            aiChatForm.addEventListener('submit', sendAiMessage);
+
+            // Mentor Chat
+            closeMentorChat.addEventListener('click', () => {
+                mentorChatModal.style.display = 'none';
+            });
+
+            document.getElementById('send-mentor-chat-btn').addEventListener('click', sendMentorMessage);
+
+            mentorChatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMentorMessage();
+                }
+            });
+
+            // Search
+            searchBtn.addEventListener('click', () => {
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm) {
+                    fetchMentors(searchTerm);
+                }
+            });
+            
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const searchTerm = searchInput.value.trim();
+                    if (searchTerm) {
+                        fetchMentors(searchTerm);
+                    }
+                }
+            });
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const tag = btn.dataset.tag;
+                    if (tag === 'all') {
+                        fetchMentors('');
+                    } else {
+                        fetchMentors(tag);
+                    }
+                });
+            });
+            
+            // Load some mentors by default on page load
+            fetchMentors('');
+
+            // Make joinChatAsMentor available globally
+            window.joinChatAsMentor = joinChatAsMentor;
+        });
+    </script> -->
+    <!-- <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // DOM Elements
+    const roleSwitcher = document.getElementById('role-switcher');
+    const mentorIdInput = document.getElementById('mentor-id-input');
+    const mentorIdField = document.getElementById('mentor-id');
+    const activateMentorBtn = document.getElementById('activate-mentor');
+    const userView = document.getElementById('user-view');
+    const mentorView = document.getElementById('mentor-view');
+
+    const searchInput = document.getElementById('search');
+    const searchBtn = document.getElementById('search-btn');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const resultsContainer = document.getElementById('results');
+    const loadingElement = document.getElementById('loading');
+    const noResultsElement = document.getElementById('no-results');
+
+    const chatButton = document.getElementById('chatButton');
+    const aiChatContainer = document.getElementById('aiChatContainer');
+    const closeAiChat = document.getElementById('closeAiChat');
+    const aiChatMessages = document.getElementById('aiChatMessages');
+    const aiChatForm = document.getElementById('aiChatForm');
+    const aiChatInput = document.getElementById('aiChatInput');
+    const aiTypingIndicator = document.getElementById('aiTypingIndicator');
+
+    const mentorChatModal = document.getElementById('mentorChatModal');
+    const closeMentorChat = document.getElementById('close-mentor-chat');
+    const mentorChatMessages = document.getElementById('mentor-chat-messages');
+    const mentorChatInput = document.getElementById('mentor-chat-input');
+    const mentorChatName = document.getElementById('mentor-chat-name');
+
+    // State
+    let currentRole = 'user';
+    let currentUserId = 'user_' + Math.random().toString(36).substr(2, 5);
+    let currentRoom = null;
+    let currentMentor = null;
+
+    const socket = io('http://localhost:5000');
+
+    // Role Switching
+    roleSwitcher.addEventListener('change', function () {
+        if (this.value === 'mentor') {
+            mentorIdInput.style.display = 'block';
+        } else {
+            mentorIdInput.style.display = 'none';
+            switchToUserMode();
+        }
+    });
+
+    activateMentorBtn.addEventListener('click', function () {
+        const mentorId = mentorIdField.value.trim();
+        if (mentorId) {
+            switchToMentorMode(mentorId);
+        }
+    });
+
+    function switchToMentorMode(mentorId) {
+        currentRole = 'mentor';
+        currentUserId = `mentor_${mentorId}`;
+
+        userView.style.display = 'none';
+        mentorView.style.display = 'block';
+
+        socket.emit('mentor_join', { mentor_id: mentorId });
+        loadMentorChats(mentorId);
+    }
+
+    function switchToUserMode() {
+        currentRole = 'user';
+        userView.style.display = 'block';
+        mentorView.style.display = 'none';
+    }
+
+    function loadMentorChats(mentorId) {
+        fetch(`http://localhost:5000/api/mentor/active_chats?mentor_id=${mentorId}`)
+            .then(res => res.json())
+            .then(data => {
+                const chatList = document.getElementById('mentor-chat-list');
+                chatList.innerHTML = data.chats.map(chat => `
+                    <div class="chat-item" data-room="${chat}">
+                        Chat with User ${chat.split('_')[1].replace('user', '')}
+                        <button onclick="joinChatAsMentor('${chat}')">Join</button>
+                    </div>
+                `).join('');
+            });
+    }
+
+    window.joinChatAsMentor = function (roomId) {
+        currentRoom = roomId;
+        const mentorId = currentUserId.split('_')[1];
+        socket.emit('join_chat', {
+            room_id: roomId,
+            username: `Mentor-${mentorId}`,
+        });
+
+        mentorChatModal.style.display = 'flex';
+        mentorChatName.textContent = `User ${roomId.split('_')[1].replace('user', '')}`;
+        mentorChatMessages.innerHTML = '';
+    }
+
+    // Mentor Search
+    async function fetchMentors(problem = '') {
+        loadingElement.style.display = 'block';
+        resultsContainer.innerHTML = '';
+        noResultsElement.style.display = 'none';
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/recommend?problem=${encodeURIComponent(problem)}`);
+            const data = await response.json();
+
+            loadingElement.style.display = 'none';
+
+            if (data.mentors && data.mentors.length > 0) {
+                displayMentors(data.mentors);
+            } else {
+                noResultsElement.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error fetching mentors:', error);
+            loadingElement.style.display = 'none';
+            noResultsElement.style.display = 'block';
+        }
+    }
+
+    function displayMentors(mentors) {
+        resultsContainer.innerHTML = '';
+
+        mentors.forEach(mentor => {
+            const mentorCard = document.createElement('div');
+            mentorCard.className = 'mentor-card';
+
+            mentorCard.innerHTML = `
+                <div class="mentor-header">
+                    <h2>${mentor.name}</h2>
+                    <div class="mentor-rating">
+                        <span>⭐</span>
+                        <span>${mentor.rating}</span>
+                    </div>
+                </div>
+                <div class="mentor-body">
+                    <div class="mentor-expertise">
+                        ${mentor.problem_tags.map(tag => `<span class="expertise-tag">${tag}</span>`).join('')}
+                    </div>
+                    <p class="mentor-story">${mentor.story}</p>
+                </div>
+                <div class="mentor-footer">
+                    <span class="mentor-language">${mentor.language}</span>
+                    <button class="contact-btn chat-btn" data-mentor-id="${mentor.id}" data-mentor-name="${mentor.name}">Chat Now</button>
+                </div>
+            `;
+
+            resultsContainer.appendChild(mentorCard);
+        });
+
+        document.querySelectorAll('.chat-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                startChat(this.dataset.mentorId, this.dataset.mentorName);
+            });
+        });
+    }
+
+    function startChat(mentorId, mentorName) {
+        currentMentor = { id: mentorId, name: mentorName };
+        mentorChatName.textContent = mentorName;
+
+        fetch('http://localhost:5000/api/create_chat_room', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                user_id: currentUserId,
+                mentor_id: mentorId
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                currentRoom = data.room_id;
+                socket.emit('join_chat', {
+                    room_id: currentRoom,
+                    username: `User-${currentUserId.substr(0, 4)}`
+                });
+
+                mentorChatModal.style.display = 'flex';
+                mentorChatMessages.innerHTML = '';
+            });
+    }
+
+    // Send Mentor Message
+    window.sendMentorMessage = function () {
+        const message = mentorChatInput.value.trim();
+        if (message && currentRoom) {
+            socket.emit('send_chat_message', {
+                room_id: currentRoom,
+                sender: currentUserId,
+                text: message
+            });
+
+            addMessageToChat(currentUserId, message, true, mentorChatMessages);
+            mentorChatInput.value = '';
+        }
+    }
+
+    // Send AI Message
+    aiChatForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const message = aiChatInput.value.trim();
+
+        if (message) {
+            addMessageToChat(currentUserId, message, true, aiChatMessages);
+            aiChatInput.value = '';
+            aiTypingIndicator.style.display = 'block';
+            aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+
+            fetch('http://localhost:5000/get', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ msg: message })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    aiTypingIndicator.style.display = 'none';
+                    addMessageToChat('tuks', data.response, false, aiChatMessages);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    aiTypingIndicator.style.display = 'none';
+                    addMessageToChat('tuks', "Sorry, I'm having trouble responding right now.", false, aiChatMessages);
+                });
+        }
+    });
+
+    // Add message to chat
+    function addMessageToChat(sender, message, isCurrentUser = false, container) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = isCurrentUser ? 'user-message' : 'mentor-message';
+        messageDiv.textContent = message;
+        container.appendChild(messageDiv);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    // Socket Event Listeners
+    socket.on('chat_message', (data) => {
+        if (data.sender !== currentUserId) {
+            if (mentorChatModal.style.display === 'flex') {
+                addMessageToChat(data.sender, data.text, false, mentorChatMessages);
+            }
+        }
+    });
+
+    socket.on('system_message', (data) => {
+        const systemMsg = document.createElement('div');
+        systemMsg.className = 'system-message';
+        systemMsg.textContent = data.text;
+        mentorChatMessages.appendChild(systemMsg);
+    });
+});
+</script>
+
+</body>
+</html> -->
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('1. DOM loaded, initializing...');
+
+    // DOM Elements
+    const roleSwitcher = document.getElementById('role-switcher');
+    const mentorIdInput = document.getElementById('mentor-id-input');
+    const mentorIdField = document.getElementById('mentor-id');
+    const activateMentorBtn = document.getElementById('activate-mentor');
+    const userView = document.getElementById('user-view');
+    const mentorView = document.getElementById('mentor-view');
+
+    const searchInput = document.getElementById('search');
+    const searchBtn = document.getElementById('search-btn');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const resultsContainer = document.getElementById('results');
+    const loadingElement = document.getElementById('loading');
+    const noResultsElement = document.getElementById('no-results');
+
+    const chatButton = document.getElementById('chatButton');
+    const aiChatContainer = document.getElementById('aiChatContainer');
+    const closeAiChat = document.getElementById('closeAiChat');
+    const aiChatMessages = document.getElementById('aiChatMessages');
+    const aiChatForm = document.getElementById('aiChatForm');
+    const aiChatInput = document.getElementById('aiChatInput');
+    const aiTypingIndicator = document.getElementById('aiTypingIndicator');
+
+    const mentorChatModal = document.getElementById('mentorChatModal');
+    const closeMentorChat = document.getElementById('close-mentor-chat');
+    const mentorChatMessages = document.getElementById('mentor-chat-messages');
+    const mentorChatInput = document.getElementById('mentor-chat-input');
+    const mentorChatName = document.getElementById('mentor-chat-name');
+
+    // State
+    let currentRole = 'user';
+    let currentUserId = 'user_' + Math.random().toString(36).substr(2, 5);
+    let currentRoom = null;
+    let currentMentor = null;
+
+    const socket = io('http://localhost:5000');
+    console.log('2. Socket.IO initialized');
+
+    // Role Switching
+    roleSwitcher.addEventListener('change', function () {
+        console.log('3. Role switched to:', this.value);
+        if (this.value === 'mentor') {
+            mentorIdInput.style.display = 'block';
+        } else {
+            mentorIdInput.style.display = 'none';
+            switchToUserMode();
+        }
+    });
+
+    activateMentorBtn.addEventListener('click', function () {
+        const mentorId = mentorIdField.value.trim();
+        console.log('4. Activating mentor with ID:', mentorId);
+        if (mentorId) {
+            switchToMentorMode(mentorId);
+        }
+    });
+
+    function switchToMentorMode(mentorId) {
+        currentRole = 'mentor';
+        currentUserId = `mentor_${mentorId}`;
+        console.log('5. Switched to mentor mode, ID:', currentUserId);
+        userView.style.display = 'none';
+        mentorView.style.display = 'block';
+        socket.emit('mentor_join', { mentor_id: mentorId });
+        loadMentorChats(mentorId);
+    }
+
+    function switchToUserMode() {
+        currentRole = 'user';
+        console.log('6. Switched to user mode');
+        userView.style.display = 'block';
+        mentorView.style.display = 'none';
+    }
+
+    function loadMentorChats(mentorId) {
+        console.log('7. Loading chats for mentor:', mentorId);
+        fetch(`http://localhost:5000/api/mentor/active_chats?mentor_id=${mentorId}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log('8. Mentor chats received:', data);
+                const chatList = document.getElementById('mentor-chat-list');
+                chatList.innerHTML = data.chats.map(chat => `
+                    <div class="chat-item" data-room="${chat}">
+                        Chat with User ${chat.split('_')[1].replace('user', '')}
+                        <button onclick="joinChatAsMentor('${chat}')">Join</button>
+                    </div>
+                `).join('');
+            });
+    }
+
+    window.joinChatAsMentor = function (roomId) {
+        currentRoom = roomId;
+        const mentorId = currentUserId.split('_')[1];
+        console.log('9. Joining chat as mentor, room:', roomId);
+        socket.emit('join_chat', {
+            room_id: roomId,
+            username: `Mentor-${mentorId}`,
+        });
+        mentorChatModal.style.display = 'flex';
+        mentorChatName.textContent = `User ${roomId.split('_')[1].replace('user', '')}`;
+        mentorChatMessages.innerHTML = '';
+    };
+
+    // Mentor Search
+    async function fetchMentors(problem = '') {
+        console.log('10. Fetching mentors for problem:', problem);
+        loadingElement.style.display = 'block';
+        resultsContainer.innerHTML = '';
+        noResultsElement.style.display = 'none';
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/recommend?problem=${encodeURIComponent(problem)}`);
+            console.log('11. Fetch response status:', response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log('12. Mentors data received:', data);
+
+            loadingElement.style.display = 'none';
+
+            if (data.mentors && Array.isArray(data.mentors) && data.mentors.length > 0) {
+                console.log('13. Calling displayMentors with:', data.mentors);
+                displayMentors(data.mentors);
+            } else {
+                console.warn('14. No mentors found:', data);
+                noResultsElement.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('15. Fetch error:', error);
+            loadingElement.style.display = 'none';
+            noResultsElement.style.display = 'block';
+        }
+    }
+
+    function displayMentors(mentors) {
+        console.log('16. Displaying mentors:', mentors);
+        resultsContainer.innerHTML = '';
+
+        mentors.forEach(mentor => {
+            console.log('17. Processing mentor:', mentor);
+            const mentorCard = document.createElement('div');
+            mentorCard.className = 'mentor-card';
+
+            mentorCard.innerHTML = `
+                <div class="mentor-header">
+                    <h2>${mentor.name}</h2>
+                    <div class="mentor-rating">
+                        <span>⭐</span>
+                        <span>${mentor.rating}</span>
+                    </div>
+                </div>
+                <div class="mentor-body">
+                    <div class="mentor-expertise">
+                        ${mentor.problem_tags.map(tag => `<span class="expertise-tag">${tag}</span>`).join('')}
+                    </div>
+                    <p class="mentor-story">${mentor.story}</p>
+                </div>
+                <div class="mentor-footer">
+                    <span class="mentor-language">${mentor.language}</span>
+                    <button class="contact-btn chat-btn" data-mentor-id="${mentor.id}" data-mentor-name="${mentor.name}">Chat Now</button>
+                </div>
+            `;
+
+            resultsContainer.appendChild(mentorCard);
+        });
+
+        console.log('18. Adding event listeners to chat buttons');
+        document.querySelectorAll('.chat-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                console.log('19. Chat button clicked for mentor:', this.dataset.mentorId);
+                startChat(this.dataset.mentorId, this.dataset.mentorName);
+            });
+        });
+    }
+
+    function startChat(mentorId, mentorName) {
+        currentMentor = { id: mentorId, name: mentorName };
+        console.log('20. Starting chat with mentor:', mentorId, mentorName);
+        mentorChatName.textContent = mentorName;
+
+        fetch('http://localhost:5000/api/create_chat_room', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                user_id: currentUserId,
+                mentor_id: mentorId
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log('21. Chat room created:', data);
+                currentRoom = data.room_id;
+                socket.emit('join_chat', {
+                    room_id: currentRoom,
+                    username: `User-${currentUserId.substr(0, 4)}`
+                });
+                mentorChatModal.style.display = 'flex';
+                mentorChatMessages.innerHTML = '';
+            });
+    }
+
+    // Send Mentor Message
+    window.sendMentorMessage = function () {
+        const message = mentorChatInput.value.trim();
+        if (message && currentRoom) {
+            console.log('22. Sending mentor message:', message);
+            socket.emit('send_chat_message', {
+                room_id: currentRoom,
+                sender: currentUserId,
+                text: message
+            });
+            addMessageToChat(currentUserId, message, true, mentorChatMessages);
+            mentorChatInput.value = '';
+        }
+    };
+
+    // Send AI Message
+    aiChatForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const message = aiChatInput.value.trim();
+
+        if (message) {
+            console.log('23. Sending AI message:', message);
+            addMessageToChat(currentUserId, message, true, aiChatMessages);
+            aiChatInput.value = '';
+            aiTypingIndicator.style.display = 'block';
+            aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+
+            fetch('http://localhost:5000/get', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ msg: message })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('24. AI response received:', data);
+                    aiTypingIndicator.style.display = 'none';
+                    addMessageToChat('tuks', data.response, false, aiChatMessages);
+                })
+                .catch(error => {
+                    console.error('25. AI fetch error:', error);
+                    aiTypingIndicator.style.display = 'none';
+                    addMessageToChat('tuks', "Sorry, I'm having trouble responding right now.", false, aiChatMessages);
+                });
+        }
+    });
+
+    // Add message to chat
+    function addMessageToChat(sender, message, isCurrentUser = false, container) {
+        console.log('26. Adding message:', { sender, message, isCurrentUser });
+        const messageDiv = document.createElement('div');
+        messageDiv.className = isCurrentUser ? 'user-message' : 'mentor-message';
+        messageDiv.textContent = message;
+        container.appendChild(messageDiv);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    // Socket Event Listeners
+    socket.on('chat_message', (data) => {
+        console.log('27. Received chat message:', data);
+        if (data.sender !== currentUserId) {
+            if (mentorChatModal.style.display === 'flex') {
+                addMessageToChat(data.sender, data.text, false, mentorChatMessages);
+            }
+        }
+    });
+
+    socket.on('system_message', (data) => {
+        console.log('28. Received system message:', data);
+        const systemMsg = document.createElement('div');
+        systemMsg.className = 'system-message';
+        systemMsg.textContent = data.text;
+        mentorChatMessages.appendChild(systemMsg);
+    });
+
+    // Event Listeners
+    chatButton.addEventListener('click', () => {
+        console.log('29. AI chat button clicked');
+        aiChatContainer.style.display = 'flex';
+        setTimeout(() => {
+            aiChatInput.focus();
+        }, 300);
+    });
+
+    closeAiChat.addEventListener('click', () => {
+        console.log('30. Closing AI chat');
+        aiChatContainer.style.display = 'none';
+    });
+
+    closeMentorChat.addEventListener('click', () => {
+        console.log('31. Closing mentor chat');
+        mentorChatModal.style.display = 'none';
+    });
+
+    document.getElementById('send-mentor-chat-btn').addEventListener('click', () => {
+        console.log('32. Send mentor chat button clicked');
+        sendMentorMessage();
+    });
+
+    mentorChatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            console.log('33. Enter key pressed in mentor chat');
+            sendMentorMessage();
+        }
+    });
+
+    searchBtn.addEventListener('click', () => {
+        const searchTerm = searchInput.value.trim();
+        console.log('34. Search button clicked, term:', searchTerm);
+        if (searchTerm) {
+            fetchMentors(searchTerm);
+        }
+    });
+
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const searchTerm = searchInput.value.trim();
+            console.log('35. Enter key pressed in search, term:', searchTerm);
+            if (searchTerm) {
+                fetchMentors(searchTerm);
+            }
+        }
+    });
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            console.log('36. Filter button clicked:', btn.dataset.tag);
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const tag = btn.dataset.tag;
+            if (tag === 'all') {
+                fetchMentors('');
+            } else {
+                fetchMentors(tag);
+            }
+        });
+    });
+
+    console.log('37. Initializing default mentor fetch');
+    fetchMentors('');
+});
+</script>
+</body>
+</html> 
