@@ -119,3 +119,46 @@ AnonMind is a **decentralized mental health platform** that:
 Video Link: https://youtu.be/kDtvTpJ-N7g?si=0nR2q9JZN4-GqNds
 ## Important
 🌏We tried to deploy our project on render, but since our file size was more than 512 MB, we were not able to successfully deploy it as it required premium subscription.That's why we have just uploaded a video link where we have explained all the functioning of our website including the usage of AI chatbot.
+
+🔮 Future Improvements
+🌐 Full Deployment
+
+Use platforms like AWS, Azure, or Railway for full deployment support (handle large file sizes).
+
+📱 Mobile App Version
+
+Build a cross-platform mobile app using Flutter or React Native for better accessibility.
+
+🎙️ Voice-Based Interaction
+
+Integrate voice input/output for chatbot using speech-to-text and text-to-speech APIs.
+
+🧠 Better Emotion Detection
+
+Improve NLP models using transformer-based models like BERT or GPT for deeper emotion understanding.
+
+💬 Multi-Language Support
+
+Add regional languages for chatbot and mentor communication to help more users.
+
+📊 Advanced Analytics Dashboard
+
+Add dashboards for therapists and admins to monitor user progress and mentor performance.
+
+🛡️ Blockchain for Data Security
+
+Use blockchain to log session records securely and ensure full transparency.
+
+🔔 Smart Notifications
+
+Implement a smart notification system to remind users about sessions and self-care activities.
+
+🤝 Group Support Sessions
+
+Allow users to join group chats based on their issues and connect with people with similar challenges.
+
+📚 Resource Library
+
+Add mental health articles, videos, and tools for users to learn and practice self-care.
+
+
