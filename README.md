@@ -118,8 +118,6 @@ AnonMind is a **decentralized mental health platform** that:
 - 
 Video Link: https://youtu.be/kDtvTpJ-N7g?si=0nR2q9JZN4-GqNds
 ## Important
-🌏We tried to deploy our project on render, but since our file size was more than 512 MB, we were not able to successfully deploy it as it required premium subscription.That's why we have just uploaded a video link where we have explained all the functioning of our website including the usage of AI chatbot.
-
 🔮 Future Improvements
 🌐 Full Deployment
 
